@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Working and Still Hungry</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: a single readable column; key numbers set like grocery shelf tags (yellow tag, black numerals) */
+:root{
+  --bg:#f3f4f1; --surface:#ffffff; --ink:#15181d; --muted:#565d66; --line:#d9dcd6;
+  --tag:#f5c518; --tag-ink:#15181d; --accent:#1f6f50; --accent-soft:#e3efe9; --alert:#b4341f;
+  --display:"Inter","Helvetica Neue",Arial,sans-serif; --body:"Inter","Helvetica Neue",Arial,sans-serif;
+  --mono:"IBM Plex Mono","DejaVu Sans Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121417; --surface:#1b1f24; --ink:#eef0ec; --muted:#a3aab3; --line:#2e343b;
+  --tag:#f5c518; --tag-ink:#15181d; --accent:#5cc49a; --accent-soft:#1d3329; --alert:#ef7b64; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121417; --surface:#1b1f24; --ink:#eef0ec; --muted:#a3aab3; --line:#2e343b;
+  --tag:#f5c518; --tag-ink:#15181d; --accent:#5cc49a; --accent-soft:#1d3329; --alert:#ef7b64; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6}
+.wrap{max-width:880px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding-block:14px}
+.brand{font-weight:800;letter-spacing:.02em;font-size:15px}
+.brand span{color:var(--muted);font-weight:500}
+nav{display:flex;gap:16px;flex-wrap:wrap;font-size:14px}
+nav a{color:var(--ink);text-decoration:none;border-bottom:2px solid transparent}
+nav a:hover,nav a:focus-visible{border-color:var(--tag);outline:none}
+.hero{padding-block:56px 40px}
+.eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--display);font-weight:900;font-size:clamp(38px,7vw,68px);line-height:1.02;letter-spacing:-.02em;margin:.25em 0 .35em;text-wrap:balance}
+h1 mark{background:var(--tag);color:var(--tag-ink);padding:0 .12em}
+.lede{font-size:20px;max-width:60ch;color:var(--ink)}
+.cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+.btn{display:inline-block;font-weight:700;padding:12px 18px;border:2px solid var(--ink);color:var(--ink);text-decoration:none;background:transparent;font-size:16px;cursor:pointer;font-family:var(--body)}
+.btn.primary{background:var(--ink);color:var(--bg)}
+.btn:focus-visible{outline:3px solid var(--tag);outline-offset:2px}
+section{padding-block:44px;border-top:1px solid var(--line)}
+h2{font-family:var(--display);font-weight:800;font-size:clamp(26px,4vw,36px);line-height:1.15;letter-spacing:-.01em;margin:0 0 .4em;text-wrap:balance}
+p{max-width:65ch}
+.tags{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-top:22px}
+.tag{background:var(--tag);color:var(--tag-ink);padding:16px 16px 14px;position:relative}
+.tag::before{content:"";position:absolute;top:10px;right:10px;width:9px;height:9px;border-radius:50%;background:var(--bg)}
+.tag .num{font-family:var(--display);font-weight:900;font-size:40px;line-height:1;font-variant-numeric:tabular-nums}
+.tag .lbl{font-size:14px;line-height:1.35;margin-top:8px;font-weight:500}
+.tag .src{font-family:var(--mono);font-size:11px;margin-top:10px;opacity:.75}
+figure{margin:24px 0 0;background:var(--surface);border:1px solid var(--line);padding:18px}
+figcaption{font-size:14px;color:var(--muted);margin-top:10px}
+.chart{overflow-x:auto}
+.chart svg{display:block;width:100%;min-width:520px;height:auto}
+.ax{fill:var(--muted);font:500 12px var(--mono)}
+.grid{stroke:var(--line);stroke-width:1}
+.bars{display:grid;gap:14px;margin-top:6px}
+.bar{display:grid;grid-template-columns:minmax(0,1fr);gap:4px}
+.bar .row{display:flex;justify-content:space-between;gap:10px;font-size:15px}
+.bar .row b{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.bar .track{height:16px;background:var(--accent-soft)}
+.bar .fill{height:100%;background:var(--accent)}
+.myth{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:20px}
+.myth>div{background:var(--surface);border:1px solid var(--line);padding:16px;display:grid;gap:4px}
+.myth p{margin:0 0 8px}
+.myth .k{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.myth .k.m{color:var(--alert)} .myth .k.f{color:var(--accent)} .myth .mt{text-decoration:line-through;color:var(--muted)}
+blockquote{margin:24px 0 0;font-family:var(--display);font-weight:800;font-size:clamp(22px,3.4vw,30px);line-height:1.25;border-left:6px solid var(--tag);padding-left:18px;max-width:30ch}
+blockquote cite{display:block;font:500 14px var(--body);color:var(--muted);margin-top:8px;font-style:normal}
+.steps{display:grid;gap:18px;margin-top:18px}
+.step{display:grid;grid-template-columns:36px minmax(0,1fr);gap:12px;align-items:start}
+.step .n{width:36px;height:36px;display:grid;place-items:center;background:var(--ink);color:var(--bg);font-weight:800;font-family:var(--mono)}
+textarea{width:100%;min-height:230px;font:15px/1.5 var(--body);padding:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);resize:vertical}
+textarea:focus-visible{outline:3px solid var(--tag)}
+.status{font-size:14px;color:var(--accent);min-height:1.4em;margin-top:6px}
+.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:18px}
+.links a{display:block;padding:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);text-decoration:none}
+.links a b{display:block}
+.links a span{font-size:14px;color:var(--muted)}
+.links a:hover,.links a:focus-visible{border-color:var(--ink);outline:none}
+.brief{background:var(--surface);border:1px solid var(--line);padding:20px}
+.brief ul{margin:.4em 0 0;padding-left:1.2em}
+.refs{font-size:14px;color:var(--muted)}
+.refs li{margin-bottom:8px;word-break:break-word}
+.refs a{color:var(--muted)}
+footer{border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+footer .wrap{padding-block:24px}
+@media (prefers-reduced-motion:no-preference){.fill{transition:width .6s ease}}
+</style>
+</head>
+<body>
+
+<header class="top"><div class="wrap">
+  <div class="brand">Working and Still Hungry <span>· Fair Table Toronto</span></div>
+  <nav aria-label="Sections"><a href="#facts">The facts</a><a href="#who">Who is hungry</a><a href="#act">Take action</a><a href="#press">For media</a></nav>
+</div></header>
+
+<main>
+<div class="wrap hero">
+  <div class="eyebrow">Toronto food banks · April 2024 to March 2025</div>
+  <h1>Hunger in Toronto has a job, a student card and a <mark>rent&nbsp;bill.</mark></h1>
+  <p class="lede">Toronto food banks recorded <b>4.1 million visits</b> last year, the most ever. Almost half of the people behind those visits live in a household where someone works. Hunger here is a housing and income problem, and City Council can act on it in the 2027 budget.</p>
+  <div class="cta-row"><a class="btn primary" href="#act">Email your councillor</a><a class="btn" href="#facts">See the data</a></div>
+</div>
+
+<section id="facts"><div class="wrap">
+  <div class="eyebrow">The facts</div>
+  <h2>Demand has more than quadrupled since before the pandemic</h2>
+  <p>Every bar of this story is public data. Food bank visits in Toronto rose from about 0.94 million a year before the pandemic to 4.12 million in the year ending March 2025.</p>
+  <figure>
+    <div class="chart" role="img" aria-label="Line chart of Toronto food bank visits per year, rising from about 0.94 million in 2019-20 to 4.12 million in 2024-25.">
+    <svg viewBox="0 0 640 320" xmlns="http://www.w3.org/2000/svg">
+      <g class="grid">
+        <line x1="60" y1="270" x2="615" y2="270"/><line x1="60" y1="216.7" x2="615" y2="216.7"/><line x1="60" y1="163.3" x2="615" y2="163.3"/><line x1="60" y1="110" x2="615" y2="110"/><line x1="60" y1="56.7" x2="615" y2="56.7"/>
+      </g>
+      <g class="ax" text-anchor="end">
+        <text x="52" y="274">0</text><text x="52" y="220.7">1M</text><text x="52" y="167.3">2M</text><text x="52" y="114">3M</text><text x="52" y="60.7">4M</text>
+      </g>
+      <g class="ax" text-anchor="middle">
+        <text x="80" y="292">2019–20</text><text x="182" y="292">2020–21</text><text x="284" y="292">2021–22</text><text x="386" y="292">2022–23</text><text x="488" y="292">2023–24</text><text x="590" y="292">2024–25</text>
+      </g>
+      <polyline fill="none" stroke="var(--accent)" stroke-width="4" stroke-linejoin="round" points="80,219.9 182,192.7 284,181.5 386,135.1 488,83.9 590,50.3"/>
+      <g fill="var(--accent)"><circle cx="80" cy="219.9" r="5"/><circle cx="182" cy="192.7" r="5"/><circle cx="284" cy="181.5" r="5"/><circle cx="386" cy="135.1" r="5"/><circle cx="488" cy="83.9" r="5"/></g>
+      <circle cx="590" cy="50.3" r="8" fill="var(--tag)" stroke="var(--ink)" stroke-width="2"/>
+      <g style="font:600 13px var(--mono)" fill="var(--ink)" text-anchor="middle">
+        <text x="80" y="206">0.94M</text><text x="182" y="179">1.45M</text><text x="284" y="168">1.66M</text><text x="386" y="122">2.53M</text><text x="488" y="70">3.49M</text><text x="590" y="32">4.12M</text>
+      </g>
+    </svg></div>
+    <figcaption>Toronto food bank client visits per year (April to March). Sources: Daily Bread Food Bank and North York Harvest Food Bank, Who's Hungry reports 2021–2025. The 2019–20 figure is the pre-pandemic baseline implied by the 2024 and 2025 reports' stated increases.</figcaption>
+  </figure>
+  <div class="tags">
+    <div class="tag"><div class="num">4.1M</div><div class="lbl">food bank visits in one year, up 18% from the year before</div><div class="src">Who's Hungry 2025</div></div>
+    <div class="tag"><div class="num">1 in 10</div><div class="lbl">Torontonians now rely on a food bank, up from about 1 in 20 three years ago</div><div class="src">Who's Hungry 2025</div></div>
+    <div class="tag"><div class="num">112,554</div><div class="lbl">people used a food bank for the first time</div><div class="src">Who's Hungry 2025</div></div>
+    <div class="tag"><div class="num">1 in 4</div><div class="lbl">food bank clients is a child</div><div class="src">Who's Hungry 2025</div></div>
+  </div>
+</div></section>
+
+<section id="who"><div class="wrap">
+  <div class="eyebrow">Who is hungry</div>
+  <h2>The person in line might be your co-worker or classmate</h2>
+  <p>Most people still picture food bank users as people without jobs. The survey of Toronto food bank clients shows something different.</p>
+  <figure>
+    <div class="bars">
+      <div class="bar"><div class="row"><span>Spend more than half their income on housing</span><b>71%</b></div><div class="track"><div class="fill" style="width:71%"></div></div></div>
+      <div class="bar"><div class="row"><span>Live in a household where someone works</span><b>46%</b></div><div class="track"><div class="fill" style="width:46%"></div></div></div>
+      <div class="bar"><div class="row"><span>Are children</span><b>25%</b></div><div class="track"><div class="fill" style="width:25%"></div></div></div>
+      <div class="bar"><div class="row"><span>Are students</span><b>23%</b></div><div class="track"><div class="fill" style="width:23%"></div></div></div>
+    </div>
+    <figcaption>Share of Toronto food bank clients surveyed. Source: Who's Hungry 2025 (Daily Bread Food Bank and North York Harvest Food Bank).</figcaption>
+  </figure>
+  <h2 style="margin-top:36px">The need is getting deeper, not just wider</h2>
+  <p>For the first time since 2020, most visits (59%) came from returning clients. More than half of clients (54%) now visit three or more times a month, up from 43% the year before. People are not using food banks for a short emergency anymore. They depend on them.</p>
+  <div class="myth">
+    <div><span class="k m">Myth</span><p class="mt">Only people without jobs use food banks.</p><span class="k f">Fact</span><p>46% of clients live in a household where someone works, and 23% are students.</p></div>
+    <div><span class="k m">Myth</span><p class="mt">Food banks are for a short emergency.</p><span class="k f">Fact</span><p>54% of clients visit three or more times a month.</p></div>
+    <div><span class="k m">Myth</span><p class="mt">This is only a big-city problem.</p><span class="k f">Fact</span><p>24.0% of people in Canada lived in food-insecure households in 2025, about 9.8 million people.</p></div>
+  </div>
+  <blockquote>"Every food bank visit is a policy failure."<cite>Neil Hetherington, CEO, Daily Bread Food Bank (2025)</cite></blockquote>
+  <p style="margin-top:20px">The root causes are income and housing costs, not a lack of food. That is why our ask goes to City Council: support the Toronto Poverty Reduction Strategy and affordable housing in the 2027 budget.</p>
+</div></section>
+
+<section id="act"><div class="wrap">
+  <div class="eyebrow">Take action</div>
+  <h2>Email your city councillor in two minutes</h2>
+  <div class="steps">
+    <div class="step"><div class="n">1</div><div><b>Find your councillor.</b> Enter your address on the City of Toronto's <a href="https://www.toronto.ca/city-government/council/members-of-council/" target="_blank" rel="noopener">Members of Council</a> page to get their name and email.</div></div>
+    <div class="step"><div class="n">2</div><div><b>Edit the message below.</b> Add your name and ward, and a sentence about why this matters to you.</div></div>
+    <div class="step"><div class="n">3</div><div><b>Copy it and send it</b> from your own email to your councillor.</div></div>
+  </div>
+  <figure>
+    <label for="letter" class="eyebrow">Your message</label>
+    <textarea id="letter">Subject: Food bank use in Toronto: please act in the 2027 budget
+
+Dear Councillor [name],
+
+I live in Ward [number]. Toronto food banks recorded 4.1 million visits between April 2024 and March 2025, the highest ever. Almost half of food bank clients live in a household where someone works, and 71% spend more than half their income on housing.
+
+Hunger in our city is now an income and housing problem. I am asking you to support the Toronto Poverty Reduction Strategy and affordable housing measures in the 2027 budget.
+
+Thank you,
+[Your name]
+[Your postal code]</textarea>
+    <div class="cta-row" style="margin-top:12px"><button class="btn primary" id="copyBtn" type="button">Copy message</button></div>
+    <div class="status" id="copyStatus" role="status"></div>
+  </figure>
+  <h2 style="margin-top:36px">Other ways to help</h2>
+  <div class="links">
+    <a href="https://www.dailybread.ca/" target="_blank" rel="noopener"><b>Donate or volunteer: Daily Bread</b><span>dailybread.ca</span></a>
+    <a href="https://northyorkharvest.com/" target="_blank" rel="noopener"><b>Donate or volunteer: North York Harvest</b><span>northyorkharvest.com</span></a>
+    <a href="https://www.dailybread.ca/research-and-advocacy/research/whos-hungry-report/" target="_blank" rel="noopener"><b>Read the Who's Hungry report</b><span>The data behind this campaign</span></a>
+    <a href="https://www.toronto.ca/community-people/community-partners/poverty-reduction-strategy/" target="_blank" rel="noopener"><b>Toronto Poverty Reduction Strategy</b><span>What the City has committed to</span></a>
+  </div>
+</div></section>
+
+<section id="press"><div class="wrap">
+  <div class="eyebrow">For media and council staff</div>
+  <h2>Data brief</h2>
+  <div class="brief">
+    <b>Working and Still Hungry: key numbers</b>
+    <ul>
+      <li>4,124,313 food bank visits in Toronto, April 2024 to March 2025: up 18% in a year and 340% since before the pandemic.</li>
+      <li>More than 1 in 10 Torontonians rely on a food bank; 112,554 used one for the first time.</li>
+      <li>46% of clients live in a household where someone works; 23% are students; 1 in 4 are children.</li>
+      <li>71% of clients spend more than half their income on housing.</li>
+      <li>59% of visits came from returning clients; 54% of clients visit three or more times a month (up from 43%).</li>
+      <li>Canada-wide, 24.0% of people (about 9.8 million) lived in food-insecure households in 2025.</li>
+    </ul>
+    <p style="margin-top:12px;font-size:15px">All figures may be quoted with the sources below. Media contact: Fair Table Toronto, Data and Advocacy Team.</p>
+  </div>
+  <h2 style="margin-top:36px;font-size:22px">Sources</h2>
+  <ol class="refs">
+    <li>Daily Bread Food Bank &amp; North York Harvest Food Bank. (2025). <i>Who's Hungry 2025.</i> <a href="https://www.dailybread.ca/wp-content/uploads/2025/10/DB-Whos-Hungry-Digital-2025-October-24.pdf" target="_blank" rel="noopener">dailybread.ca</a></li>
+    <li>Daily Bread Food Bank. (2025, October 27). <i>4.1 million food bank visits reveal record depth of poverty in Toronto.</i> <a href="https://www.dailybread.ca/blog/4-1-million-food-bank-visits-reveal-record-depth-of-poverty-in-toronto/" target="_blank" rel="noopener">dailybread.ca</a></li>
+    <li>Daily Bread Food Bank &amp; North York Harvest Food Bank. (2024). <i>Who's Hungry 2024: Trapped in poverty.</i> <a href="https://www.dailybread.ca/wp-content/uploads/2024/11/DB-Whos-Hungry-Report-2024-Digital-1.pdf" target="_blank" rel="noopener">dailybread.ca</a></li>
+    <li>Daily Bread Food Bank. (2023, November 14). <i>Who's Hungry: A call to action from a city in crisis.</i> <a href="https://www.dailybread.ca/blog/whos-hungry-a-call-to-action-from-a-city-in-crisis/" target="_blank" rel="noopener">dailybread.ca</a></li>
+    <li>CBC News. (2022). <i>Daily Bread Food Bank Who's Hungry report 2022.</i> <a href="https://www.cbc.ca/news/canada/toronto/daily-bread-food-bank-whos-hungry-report-2022-1.6644327" target="_blank" rel="noopener">cbc.ca</a></li>
+    <li>PROOF. (2026). <i>New data on household food insecurity in 2025.</i> University of Toronto. <a href="https://proof.utoronto.ca/2026/new-data-on-household-food-insecurity-in-2025/" target="_blank" rel="noopener">proof.utoronto.ca</a></li>
+    <li>Statistics Canada. (n.d.). <i>Food insecurity by selected demographic characteristics</i> (Table 13-10-0835-01). <a href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1310083501" target="_blank" rel="noopener">statcan.gc.ca</a></li>
+  </ol>
+</div></section>
+</main>
+
+<footer><div class="wrap">Working and Still Hungry is a campaign by Fair Table Toronto, a fictional NGO created for WRIT 2202 (York University) by Group T: Masih Azma and Syeda Adeeba Aziza Rasul. All statistics come from the real public sources listed above.</div></footer>
+
+<script>
+document.getElementById('copyBtn').addEventListener('click',function(){
+  var t=document.getElementById('letter'),s=document.getElementById('copyStatus');
+  function sel(){t.focus();t.select();s.textContent='Message selected. Press Ctrl+C (or Cmd+C) to copy it.';}
+  try{navigator.clipboard.writeText(t.value).then(function(){s.textContent='Copied. Paste it into an email to your councillor.';},sel);}catch(e){sel();}
+});
+</script>
+
+</body>
+</html>
